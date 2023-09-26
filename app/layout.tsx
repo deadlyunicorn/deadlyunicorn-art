@@ -6,7 +6,7 @@ const philosopher = Philosopher({weight:"400",subsets:['latin']});
 
 
 export const metadata: Metadata = {
-  title: 'Art by deadlyunicorn',
+  title: 'Art by deadlyunicorn.',
   description: 'Welcome to my art page. Feel free to browse my artworks here.',
 }
 
