@@ -1,7 +1,6 @@
 import { User } from "next-auth";
 import { headers } from "next/headers"
-import { redirect } from "next/navigation";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const middleware = async( request: NextRequest ) => {
 
@@ -14,7 +13,7 @@ export const middleware = async( request: NextRequest ) => {
   const pathname = request.nextUrl.pathname;
 
   if ( pathname != "/admin/login" && !loggedIn ){
-    redirect(`/admin/login`);
+    return NextResponse.redirect( new URL( '/admin/login', process.env.serverURL ) );
   }
 
 }
