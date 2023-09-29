@@ -16,7 +16,6 @@ const LoginPage = async( { searchParams }:{ searchParams: { error?: string } } )
 
       <form 
         method="POST"
-        //this variable should be equal to process.env.NEXTAUTH_URL
         action={`${process.env.serverURL}/api/auth/callback/credentials`} 
         className="flex flex-col group gap-2">
       
