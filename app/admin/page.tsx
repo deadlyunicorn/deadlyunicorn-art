@@ -3,6 +3,7 @@ import { getBinaryData, uploadToAws } from "./aws/upload";
 import { formatDateUTC } from "../lib/formatDate";
 import { redirect } from "next/navigation";
 import { uploadToMongo } from "./mongodb/upload";
+import { revalidatePath } from "next/cache";
 
 const ImageUploadForm = () =>{
 
@@ -14,11 +15,39 @@ const ImageUploadForm = () =>{
       </nav>
       <main className="mt-[25vh] w-full">
         
-        <form action={uploadImage} className="flex flex-col w-full items-center ">
-          <input tabIndex={0} className="peer absolute left-[50%] w-1 opacity-0" accept="image/*" required type="file" name="image" id="image"/>
-          <label htmlFor="image" className="underline peer-valid:decoration-green-400 peer-focus:decoration-purple-400  decoration-red-400">Select image</label>
-          <input required className="outline-none" placeholder="Title" name="title"/>
-          <button className="hover:underline outline-none focus:underline">Send</button>
+        <form 
+          action={uploadImage}
+          className="flex flex-col w-full items-center ">
+          
+          <input 
+            required 
+            tabIndex={0} 
+            className="peer absolute left-[50%] w-1 opacity-0" 
+            accept="image/*" 
+            type="file" 
+            name="image" 
+            id="image"/>
+
+          <label 
+            htmlFor="image" 
+            className="underline 
+            peer-valid:decoration-green-400 
+            peer-focus:decoration-purple-400  
+            decoration-red-400">
+              Select image
+          </label>
+
+          <input 
+            required 
+            className="outline-none" 
+            placeholder="Title" 
+            name="title"/>
+
+          <button 
+            className="outline-none
+            hover:underline focus:underline">
+              Send
+          </button>
           
         </form>
       </main>
@@ -47,6 +76,8 @@ const uploadImage = async(formData:FormData)=>{
 
     await uploadToMongo(title,filename)
     .then( result => { if ( !result.acknowledged ) throw "MongoDB Failed"})
+
+    revalidatePath('/');
 
   }
   catch(error){
