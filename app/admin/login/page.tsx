@@ -1,13 +1,12 @@
-import { getCsrfToken } from "next-auth/react";
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 
 const LoginPage = async( { searchParams }:{ searchParams: { error?: string } } ) => {
 
-  const csrfToken = cookies()
-    .getAll()
-    .find( cookie => cookie.name == "next-auth.csrf-token")?.value
-    .split('|')[0]; 
-    //because get a string: "cookie1|cookie2"
+  const csrfToken = await fetch(`${process.env.serverURL}/api/auth/csrf`,{
+    headers: headers()
+  })
+    .then( res => res.json() )
+    .then( csrfTokenObject => csrfTokenObject?.csrfToken );
 
   return (
 
