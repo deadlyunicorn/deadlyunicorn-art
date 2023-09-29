@@ -5,7 +5,9 @@ const LoginPage = async( { searchParams }:{ searchParams: { error?: string } } )
 
 
   const csrfToken = await fetch(`${process.env.serverURL}/api/auth/csrf`,{
-    headers: headers(),
+    headers: [
+      [ "cookie", String( headers().get( 'cookie' ) ) ]
+    ],
   })
     .then( res => res.json() )
     .then( csrfTokenObject => csrfTokenObject?.csrfToken );
