@@ -1,10 +1,11 @@
 import { User } from "next-auth";
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export const middleware = async( request: NextRequest ) => {
 
   const session:session = await fetch(`${process.env.serverURL}/api/auth/session`, {
-    // headers:headers()
+    headers:headers()
   })
   .then( async( res ) => await res.json() );
 
