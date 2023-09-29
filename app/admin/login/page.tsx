@@ -34,7 +34,7 @@ const LoginPage = async( { searchParams }:{ searchParams: { error?: string } } )
           type="password"/>
 
         <input 
-          // hidden 
+          hidden 
           value={csrfToken} 
           name="csrfToken" 
           readOnly/>
