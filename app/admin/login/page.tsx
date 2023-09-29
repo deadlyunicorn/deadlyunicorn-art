@@ -1,59 +1,64 @@
+import { getCsrfToken } from "next-auth/react";
+import { cookies } from "next/headers";
 
-const LoginPage = () => {
+const LoginPage = async( { searchParams }:{ searchParams: { error?: string } } ) => {
 
-  const loggedIn = false;
-
-  if (loggedIn){
-    // redirect /admin
-  }
+  const csrfToken = cookies()
+    .getAll()
+    .find( cookie => cookie.name == "next-auth.csrf-token")?.value
+    .split('|')[0]; 
+    //because get a string: "cookie1|cookie2"
 
   return (
-    <dialog open>
+
+    <main className="flex flex-col items-center mt-2">
+
       <form 
-      // method="dialog">
-      action={handleLogin} className="flex flex-col group" >
+        method="POST"
+        //this variable should be equal to process.env.NEXTAUTH_URL
+        action={`${process.env.serverURL}/api/auth/callback/credentials`} 
+        className="flex flex-col group gap-2">
       
-        <input className="outline-none focus:border-b border-black" required placeholder="login" name="login"/>
-        <input className="outline-none focus:border-b border-black" required placeholder="password" name="password" type="password"/>
-        <button className="outline-none focus:underline focus:decoration-red-600 focus:group-valid:decoration-green-600">submit</button>
+        <input 
+          className="outline-none focus:border-b border-black" 
+          required 
+          placeholder="login" 
+          name="login"/>
+
+        <input 
+          className="outline-none focus:border-b border-black" 
+          required 
+          placeholder="password" 
+          name="password" 
+          type="password"/>
+
+        <input 
+          hidden 
+          value={csrfToken} 
+          name="csrfToken" 
+          readOnly/>
+
+        <button 
+          className="outline-none 
+            focus:underline focus:decoration-red-600 
+            focus:group-valid:decoration-green-600">
+              submit
+        </button>
+        
       </form>
-    </dialog>
+
+      {
+        searchParams.error && 
+          <p 
+            className="text-red-600 text-center capitalize">
+              login failed.
+          </p>
+      }
+
+      
+    </main>
   )
 }
 
-
-const handleLogin = async( formData: FormData ) => {
-
-  "use server"
-
-  const login = formData.get('login') as String;
-  const password = formData.get('password') as String;
-
-  await fetch ( `${process.env.serverURL}/admin/login`, 
-    { 
-      method: "POST",
-      body: JSON.stringify({ 
-        login: login,
-        password: password 
-      }),
-      cache:"no-cache" //! To be removed when done testing
-    })
-    .then( async( res ) => { 
-      if (res.ok) console.log(await res.json());
-    })
-
-}
-
-/* //TODO 
-    const user = await mongoFindUser(username)
-    if ( !user ) return done( null, false);
-
-    const hash = user.password;
-    const passwordIsCorrect = await bcrypt.compare( password, hash );
-
-    if ( !passwordIsCorrect ) return done( null, false);
-    return done( null, { username: user.username } );
-
-*/
 
 export default LoginPage;
