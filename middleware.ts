@@ -5,7 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const middleware = async( request: NextRequest ) => {
 
   const session:session = await fetch(`${process.env.serverURL}/api/auth/session`, {
-    headers:headers()
+    headers:headers(),
+    cache: "no-store"
   })
   .then( async( res ) => await res.json() );
 
