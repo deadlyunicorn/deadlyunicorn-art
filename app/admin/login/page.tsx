@@ -4,9 +4,10 @@ export const dynamic = 'force-dynamic';
 
 const LoginPage = async( { searchParams }:{ searchParams: { error?: string } } ) => {
 
+  const headersAll = headers();
 
   const csrfToken = await fetch(`${process.env.serverURL}/api/auth/csrf`,{
-    headers: headers(),
+    headers: headersAll,
     cache: "no-store"
   })
     .then( res => res.json() )
