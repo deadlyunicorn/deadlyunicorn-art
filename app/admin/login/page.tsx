@@ -1,14 +1,11 @@
 import { headers } from "next/headers";
 
-export const dynamic = 'force-dynamic';
 
 const LoginPage = async( { searchParams }:{ searchParams: { error?: string } } ) => {
 
-  const headersAll = headers();
 
   const csrfToken = await fetch(`${process.env.serverURL}/api/auth/csrf`,{
-    headers: headersAll,
-    cache: "no-store"
+    headers: headers(),
   })
     .then( res => res.json() )
     .then( csrfTokenObject => csrfTokenObject?.csrfToken );
