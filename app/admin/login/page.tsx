@@ -1,5 +1,7 @@
 import { headers } from "next/headers";
 
+export const dynamic = 'force-dynamic';
+
 const LoginPage = async( { searchParams }:{ searchParams: { error?: string } } ) => {
 
 
