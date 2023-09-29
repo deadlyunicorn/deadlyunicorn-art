@@ -4,8 +4,9 @@ import { formatDateUTC } from "../lib/formatDate";
 import { redirect } from "next/navigation";
 import { uploadToMongo } from "./mongodb/upload";
 import { revalidatePath } from "next/cache";
+import { FormStatus } from "./SubmitButton";
 
-const ImageUploadForm = () =>{
+const ImageUploadForm = ( { searchParams } : { searchParams: { error? : string }} ) =>{
 
 
   return (
@@ -46,10 +47,19 @@ const ImageUploadForm = () =>{
           <button 
             className="outline-none
             hover:underline focus:underline">
-              Send
+              <FormStatus/>
           </button>
           
         </form>
+
+        { 
+          searchParams.error &&
+          <p className="text-red-600 text-center">
+          
+            {searchParams.error} 
+            
+          </p>  
+        }
       </main>
     </>
   )
@@ -59,12 +69,12 @@ export default ImageUploadForm;
 
 const uploadImage = async(formData:FormData)=>{
   "use server"
-  
   try{
     const image = formData.get('image') as File;
     if (image.size >  5_242_880) throw "Too large";
 
-    const type = image.type.slice(6);
+                                        //svg,png,jpg
+    const type = image.type.slice(6,9); //ONLY 3 LETTER EXTENSIONS supported
     const title = formData.get('title') as string;
     const filename = `${formatDateUTC(new Date())}/${title.replaceAll(' ','_')}.${type}`;
 
