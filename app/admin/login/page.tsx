@@ -1,13 +1,19 @@
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 const LoginPage = async( { searchParams }:{ searchParams: { error?: string } } ) => {
 
-  const csrfToken = await fetch(`${process.env.serverURL}/api/auth/csrf`,{
-    headers: headers(),
-    cache: "no-store"
-  })
-    .then( res => res.json() )
-    .then( csrfTokenObject => csrfTokenObject?.csrfToken );
+  // const csrfToken = await fetch(`${process.env.serverURL}/api/auth/csrf`,{
+  //   headers: headers(),
+  //   cache: "no-store"
+  // })
+  //   .then( res => res.json() )
+  //   .then( csrfTokenObject => csrfTokenObject?.csrfToken );
+  const csrfToken = cookies() //Might glitch sometimes..
+  .getAll()
+  .find( cookie => cookie.name == "next-auth.csrf-token")?.value
+  .split('|')[0]; 
+  //because get a string: "cookie1|cookie2"
+  //
 
   return (
 
