@@ -5,11 +5,7 @@ import { redirect } from "next/navigation";
 import { uploadToMongo } from "./mongodb/upload";
 
 const ImageUploadForm = () =>{
-  const loggedIn = false;
 
-  if ( !loggedIn ){
-    redirect('/admin/login');
-  }
 
   return (
     <>
