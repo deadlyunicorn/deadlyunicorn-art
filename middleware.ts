@@ -4,18 +4,25 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const middleware = async( request: NextRequest ) => {
 
-  const session:session = await fetch(`${process.env.serverURL}/api/auth/session`, {
-    headers:headers(),
-    // cache: "no-store"
-  })
-  .then( async( res ) => await res.json() );
+  const headerList = headers(); 
+  // const authHeader = headerList.get('authorization');
+  const cookieHeader = String( headerList.get('cookie') );
 
-  const loggedIn = Object.keys(session).length > 0? true :false;
-  const pathname = request.nextUrl.pathname;
-
-  if ( pathname != "/admin/login" && !loggedIn ){
-    return NextResponse.redirect( new URL( '/admin/login', process.env.serverURL ) );
-  }
+    const session:session = await fetch(`${process.env.serverURL}/api/auth/session`, {
+      headers:[
+        // [ "authorization", auth ],
+        [ "cookie", cookieHeader ]
+      ]
+      // cache: "no-store"
+    })
+    .then( async( res ) => await res.json() );
+  
+    const loggedIn = Object.keys(session).length > 0? true :false;
+    const pathname = request.nextUrl.pathname;
+  
+    if ( pathname != "/admin/login" && !loggedIn ){
+      return NextResponse.redirect( new URL( '/admin/login', process.env.serverURL ) );
+    }
 
 }
 
